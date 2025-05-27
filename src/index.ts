@@ -21,8 +21,13 @@ const createTodo = (todo: Todos) => {
     const newLI = document.createElement("li");
     const checkBox = document.createElement("input")
     const timeRex = document.createElement("small");
-    
     checkBox.type = "checkbox";
+    checkBox.checked = todo.completed;
+    checkBox.addEventListener("change", function(){
+        todo.completed = checkBox.checked;
+        updateLocaStorage();
+    })
+
     newLI.append(todo.name);
     newLI.append(checkBox);
     list?.append(newLI);
@@ -33,21 +38,9 @@ const todos: Todos[] = readTodos();
 todos.forEach(createTodo)
 
 
-// const createTodo = (todo: Todos) => {
-//     const newTodoList = input.value;
-
-//     const newLI = document.createElement("li");
-
-//     const checkBox = document.createElement("input")
-
-//     checkBox.type = "checkbox";
-
-//     newLI.append(newTodoList);
-
-//     newLI.append(checkBox);
-
-//     list?.append(newLI);
-// }
+    function updateLocaStorage(){
+        localStorage.setItem("todos", JSON.stringify(todos))
+    }
 
     function readTodos(): Todos[] {
         const todoJSON = localStorage.getItem("todos")
@@ -66,7 +59,7 @@ function handleSubmit(e: SubmitEvent){
 
     createTodo(newTodo)
     todos.push(newTodo);
-    localStorage.setItem("todos", JSON.stringify(todos))
+    updateLocaStorage();
     input.value = "";
 }
 

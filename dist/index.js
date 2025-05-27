@@ -13,6 +13,11 @@ const createTodo = (todo) => {
     const checkBox = document.createElement("input");
     const timeRex = document.createElement("small");
     checkBox.type = "checkbox";
+    checkBox.checked = todo.completed;
+    checkBox.addEventListener("change", function () {
+        todo.completed = checkBox.checked;
+        updateLocaStorage();
+    });
     newLI.append(todo.name);
     newLI.append(checkBox);
     list?.append(newLI);
@@ -20,15 +25,9 @@ const createTodo = (todo) => {
 };
 const todos = readTodos();
 todos.forEach(createTodo);
-// const createTodo = (todo: Todos) => {
-//     const newTodoList = input.value;
-//     const newLI = document.createElement("li");
-//     const checkBox = document.createElement("input")
-//     checkBox.type = "checkbox";
-//     newLI.append(newTodoList);
-//     newLI.append(checkBox);
-//     list?.append(newLI);
-// }
+function updateLocaStorage() {
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
 function readTodos() {
     const todoJSON = localStorage.getItem("todos");
     if (todoJSON === null)
@@ -45,7 +44,7 @@ function handleSubmit(e) {
     };
     createTodo(newTodo);
     todos.push(newTodo);
-    localStorage.setItem("todos", JSON.stringify(todos));
+    updateLocaStorage();
     input.value = "";
 }
 // TYPE ASSERTIONS
